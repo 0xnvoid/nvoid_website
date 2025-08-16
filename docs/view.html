@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>NVOID — project docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <style>
+    .md h1{font-size:48px}
+    .md h2{font-size:32px;margin-top:24px}
+    .md h3{font-size:24px;margin-top:16px}
+    .md code, .md pre{background:#0f0f0f;border:1px solid #2a2a2a;padding:2px 6px;border-radius:4px}
+    [data-theme="light"] .md code, [data-theme="light"] .md pre{background:#f4f4f4;border-color:#d0d0d0}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <a class="btn" href="/">← home</a>
+      <div class="logo"><span class="badge">[]</span><strong>NVOID</strong></div>
+      <a id="repo-link" class="btn" href="#" target="_blank" rel="noopener">repo ↗</a>
+    </div>
+  </header>
+  
+  <main class="container">
+    <h1 id="title" class="section-title">> docs</h1>
+    <div id="doc" class="md note">loading…</div>
+  </main>
+  
+  <footer class="footer"><div class="container"><span class="note">NVOID</span></div></footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    (function(){
+      const p = new URLSearchParams(location.search);
+      const repo = p.get('repo');
+      const title = document.getElementById('title');
+      const el = document.getElementById('doc');
+      const repoLink = document.getElementById('repo-link');
+      if(!repo){
+        title.textContent = '> docs';
+        el.textContent = 'missing ?repo=name';
+        return;
+      }
+      title.textContent = '> ' + repo + ' docs';
+      repoLink.href = 'https://github.com/0xnvoid/' + encodeURIComponent(repo);
+      const raw = `https://raw.githubusercontent.com/0xnvoid/${encodeURIComponent(repo)}/main/README.md`;
+      fetch(raw).then(r=>{
+        if(!r.ok) throw new Error('not ok');
+        return r.text();
+      }).then(md=>{
+        el.classList.remove('note');
+        el.innerHTML = marked.parse(md);
+      }).catch(()=>{
+        el.textContent = 'unable to load README. open the repo: ' + repoLink.href;
+      });
+    })();
+  </script>
+</body>
+</html>

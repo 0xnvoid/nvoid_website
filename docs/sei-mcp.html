@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>sei-mcp — docs</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <meta name="description" content="Docs for sei-mcp from NVOID (nullvoid)." />
+  <style>
+    .md h1{font-size:48px}
+    .md h2{font-size:32px;margin-top:24px}
+    .md h3{font-size:24px;margin-top:16px}
+    .md code, .md pre{background:#0f0f0f;border:1px solid #2a2a2a;padding:2px 6px;border-radius:4px}
+    .back{position:sticky;top:0;display:inline-block;margin:16px 0}
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container nav">
+      <a class="btn" href="/">← back</a>
+      <div class="logo"><span class="badge">[]</span><strong>NVOID</strong></div>
+      <a class="btn" href="https://github.com/0xnvoid/sei-mcp" target="_blank" rel="noopener">repo ↗</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <h1 class="section-title">> sei-mcp docs</h1>
+    <div id="doc" class="md note">loading README.md…</div>
+  </main>
+
+  <footer class="footer">
+    <div class="container"><span class="note">NVOID</span></div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script>
+    (async function(){
+      const el = document.getElementById('doc');
+      try{
+        const res = await fetch('https://raw.githubusercontent.com/0xnvoid/sei-mcp/main/README.md');
+        if(!res.ok) throw new Error('failed to fetch README');
+        const md = await res.text();
+        el.classList.remove('note');
+        el.innerHTML = marked.parse(md);
+      }catch(err){
+        el.textContent = 'unable to load docs. open the repo instead: https://github.com/0xnvoid/sei-mcp';
+      }
+    })();
+  </script>
+</body>
+</html>
