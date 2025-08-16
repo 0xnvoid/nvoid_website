@@ -8,6 +8,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../assets/css/style.css" />
+  <style>
+    .docs-wrap{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:960px){.docs-wrap{grid-template-columns:minmax(0,1fr) 320px}}
+    .sidebar{position:sticky;top:16px;height:max-content}
+  </style>
   <meta name="description" content="Docs for sei-mcp from NVOID (nullvoid)." />
   <style>
     .md h1{font-size:48px}
@@ -21,14 +26,26 @@
   <header class="header">
     <div class="container nav">
       <a class="btn" href="../index.html">← back</a>
-      <div class="logo"><span class="badge">[]</span><strong>NVOID</strong></div>
-      <a class="btn" href="https://github.com/0xnvoid/sei-mcp" target="_blank" rel="noopener">repo ↗</a>
+      <div class="logo">
+        <img src="../assets/img/logo.png" alt="nvoid" onerror="this.style.display='none'">
+        <span class="badge">[]</span><strong>NVOID</strong>
+      </div>
+      <nav style="display:flex; gap:12px; align-items:center">
+        <button id="theme-toggle" class="btn" type="button">mode</button>
+        <a class="btn" href="https://github.com/0xnvoid/sei-mcp" target="_blank" rel="noopener">repo ↗</a>
+      </nav>
     </div>
   </header>
 
   <main class="container">
-    <h1 class="section-title">> sei-mcp docs</h1>
-    <div id="doc" class="md note">loading README.md…</div>
+    <section class="section">
+      <div class="container">
+        <div class="window">
+          <div class="titlebar"><span>sei-mcp</span><span>README</span></div>
+          <div id="md" class="body md">Loading...</div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer class="footer">
@@ -36,19 +53,18 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="../assets/js/main.js"></script>
   <script>
-    (async function(){
-      const el = document.getElementById('doc');
-      try{
-        const res = await fetch('https://raw.githubusercontent.com/0xnvoid/sei-mcp/main/README.md');
-        if(!res.ok) throw new Error('failed to fetch README');
-        const md = await res.text();
-        el.classList.remove('note');
-        el.innerHTML = marked.parse(md);
-      }catch(err){
-        el.textContent = 'unable to load docs. open the repo instead: https://github.com/0xnvoid/sei-mcp';
-      }
-    })();
+    const org = '0xnvoid';
+    const repo = 'sei-mcp';
+    const md = document.getElementById('md');
+    fetch(`https://raw.githubusercontent.com/${org}/${repo}/main/README.md`).then(async r=>{
+      if(!r.ok) throw new Error('not ok');
+      const text = await r.text();
+      md.innerHTML = marked.parse(text);
+    }).catch(()=>{
+      md.textContent = 'unable to load README. open the repo: https://github.com/0xnvoid/sei-mcp';
+    });
   </script>
 </body>
 </html>

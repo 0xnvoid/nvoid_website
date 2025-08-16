@@ -9,6 +9,16 @@
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./assets/css/style.css" />
   <meta name="description" content="Novid (nullvoid) — hackathon team. Projects and docs." />
+  <!-- Open Graph / Twitter -->
+  <meta property="og:title" content="NVOID — nullvoid" />
+  <meta property="og:description" content="Novid (nullvoid) — hackathon team. Projects and docs." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="./assets/img/logo.png" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="NVOID — nullvoid" />
+  <meta name="twitter:description" content="Novid (nullvoid) — hackathon team. Projects and docs." />
+  <meta name="twitter:image" content="./assets/img/logo.png" />
+  <meta name="theme-color" content="#0b0b0b" />
 </head>
 <body>
   <header class="header">
@@ -23,6 +33,7 @@
         <a class="btn" href="#team">team</a>
         <a class="btn" href="#contact">contact</a>
         <a class="btn" href="https://github.com/0xnvoid" target="_blank" rel="noopener">github ↗</a>
+        <a class="btn" href="https://x.com/0xnvoid" target="_blank" rel="noopener">x @0xnvoid ↗</a>
         <button id="theme-toggle" class="btn" type="button">mode</button>
       </nav>
     </div>
@@ -34,7 +45,10 @@
         <div class="window">
           <div class="titlebar"><span>nvoid/console</span><span>v0.1</span></div>
           <div class="body">
-            <h1 class="title">NULLVOID</h1>
+            <h1 class="title">
+              <span id="typewriter" aria-label="NULLVOID"></span>
+              <span class="cursor" aria-hidden="true">|</span>
+            </h1>
             <p class="subtitle">
               We build in web3, blockchain, and AI. ❤️
             </p>
@@ -43,14 +57,37 @@
               <div class="k">org</div><div class="v"><a href="https://github.com/0xnvoid" target="_blank" rel="noopener">github.com/0xnvoid</a></div>
               <div class="k">email</div><div class="v"><a href="mailto:0xnvoid@gmail.com">0xnvoid@gmail.com</a></div>
             </div>
+            <div class="hr"></div>
+            <div id="term-rotator" class="note">loading…</div>
+            <div class="hr"></div>
+            <div id="snake-runner"></div>
           </div>
         </div>
-
+        
+        <aside class="window" aria-label="Latest from X" style="overflow:hidden">
+          <div class="titlebar"><span>@0xnvoid</span><span>x</span></div>
+          <div class="body">
+            <blockquote class="twitter-tweet" data-theme="light" data-dnt="true" data-align="center" style="margin:0 auto">
+              <a href="https://twitter.com/0xnvoid/status/1956817454497436121">Tweet by @0xnvoid</a>
+            </blockquote>
+            <div style="margin-top:8px">
+              <div class="note">follow us cuz we are awesome</div>
+            </div>
+          </div>
+        </aside>
+        
         <div class="ascii-panel">
           + our flow  
           home → projects → docs  
           select a project to read its docs.
         </div>
+        <aside>
+          <div class="ascii-panel">
+            + our flow  
+            home → projects → docs  
+          </div>
+        </aside>
+        
       </div>
     </section>
 
@@ -58,6 +95,12 @@
       <div class="container" style="white-space:nowrap;display:flex;flex-direction:column;gap:6px">
         <div id="chips" class="chips"></div>
         <div id="ascii-track" class="ascii-track"></div>
+      </div>
+    </section>
+
+    <section class="bits-strip">
+      <div class="container">
+        <div class="bits-track" id="bits-track">loading…</div>
       </div>
     </section>
 
@@ -115,5 +158,19 @@
   </footer>
 
   <script src="./assets/js/main.js"></script>
+  <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  <script>
+    // Sync X embed theme with site theme
+    function applyTweetTheme(){
+      const theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+      const a = document.querySelector('.twitter-timeline');
+      if(!a) return;
+      a.setAttribute('data-theme', theme);
+      if(window.twttr && twttr.widgets){ twttr.widgets.load(); }
+    }
+    const obs = new MutationObserver(applyTweetTheme);
+    obs.observe(document.documentElement, { attributes:true, attributeFilter:['data-theme'] });
+    window.addEventListener('load', applyTweetTheme);
+  </script>
 </body>
 </html>

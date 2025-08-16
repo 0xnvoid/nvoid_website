@@ -14,34 +14,63 @@
     .md h3{font-size:24px;margin-top:16px}
     .md code, .md pre{background:#0f0f0f;border:1px solid #2a2a2a;padding:2px 6px;border-radius:4px}
     [data-theme="light"] .md code, [data-theme="light"] .md pre{background:#f4f4f4;border-color:#d0d0d0}
+    .md pre{overflow:auto}
+    .docs-wrap{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:960px){.docs-wrap{grid-template-columns:minmax(0,1fr) 320px}}
+    .sidebar{position:sticky;top:16px;height:max-content}
   </style>
 </head>
 <body>
   <header class="header">
     <div class="container nav">
       <a class="btn" href="../index.html">← home</a>
-      <div class="logo"><span class="badge">[]</span><strong>NVOID</strong></div>
-      <a id="repo-link" class="btn" href="#" target="_blank" rel="noopener">repo ↗</a>
+      <div class="logo">
+        <img src="../assets/img/logo.png" alt="nvoid" onerror="this.style.display='none'">
+        <span class="badge">[]</span><strong>NVOID</strong>
+      </div>
+      <nav style="display:flex; gap:12px; align-items:center">
+        <button id="theme-toggle" class="btn" type="button">mode</button>
+        <a id="repo-link" class="btn" href="#" target="_blank" rel="noopener">repo ↗</a>
+      </nav>
     </div>
   </header>
-  
-  <main class="container">
-    <h1 id="title" class="section-title">> docs</h1>
-    <div id="doc" class="md note">loading…</div>
+
+  <main>
+    <section class="section">
+      <div class="container docs-wrap">
+        <div class="window">
+          <div class="titlebar"><span id="repo-name">docs</span><span>readme</span></div>
+          <div id="md" class="body md">Loading...</div>
+        </div>
+        <aside class="sidebar">
+          <div class="window">
+            <div class="titlebar"><span>contents</span><span>#</span></div>
+            <div id="toc" class="body note">Generating…</div>
+          </div>
+        </aside>
+      </div>
+    </section>
   </main>
-  
-  <footer class="footer"><div class="container"><span class="note">NVOID</span></div></footer>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="hr"></div>
+      <span class="note">NVOID</span>
+    </div>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="../assets/js/main.js"></script>
   <script>
-    (function(){
-      const p = new URLSearchParams(location.search);
-      const repo = p.get('repo');
-      const title = document.getElementById('title');
-      const el = document.getElementById('doc');
+    async function loadReadme(){
+      const params = new URLSearchParams(location.search);
+      const repo = params.get('repo');
+      const org = '0xnvoid';
+      const title = document.getElementById('repo-name');
+      const el = document.getElementById('md');
       const repoLink = document.getElementById('repo-link');
       if(!repo){
-        title.textContent = '> docs';
+        title.textContent = 'docs';
         el.textContent = 'missing ?repo=name';
         return;
       }
@@ -54,10 +83,42 @@
       }).then(md=>{
         el.classList.remove('note');
         el.innerHTML = marked.parse(md);
+        // build TOC and anchors
+        buildTocAndAnchors();
       }).catch(()=>{
         el.textContent = 'unable to load README. open the repo: ' + repoLink.href;
       });
-    })();
+    }
+    function slugify(s){
+      return s.toLowerCase().replace(/[^a-z0-9\s-]/g,'').trim().replace(/\s+/g,'-').slice(0,80);
+    }
+    function buildTocAndAnchors(){
+      const md = document.getElementById('md');
+      const toc = document.getElementById('toc');
+      const heads = md.querySelectorAll('h1, h2, h3');
+      if(!heads.length){ toc.textContent = '—'; return; }
+      const ul = document.createElement('ul');
+      ul.style.listStyle = 'none'; ul.style.padding = '0'; ul.style.margin = '0';
+      heads.forEach(h=>{
+        const level = h.tagName === 'H1' ? 1 : h.tagName === 'H2' ? 2 : 3;
+        const text = h.textContent.trim();
+        const id = h.id || slugify(text);
+        h.id = id;
+        const li = document.createElement('li');
+        li.style.margin = '4px 0'; li.style.paddingLeft = (level-1)*8 + 'px';
+        const a = document.createElement('a'); a.href = '#' + id; a.textContent = text; a.className = 'note';
+        li.appendChild(a); ul.appendChild(li);
+        // add anchor symbol
+        const anchor = document.createElement('a');
+        anchor.href = '#' + id; anchor.textContent = '¶'; anchor.className = 'note';
+        anchor.style.marginLeft = '6px'; anchor.style.textDecoration = 'none';
+        h.appendChild(anchor);
+      });
+      toc.classList.remove('note');
+      toc.innerHTML = '';
+      toc.appendChild(ul);
+    }
+    loadReadme();
   </script>
 </body>
 </html>
