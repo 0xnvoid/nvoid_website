@@ -45,7 +45,7 @@
         for(const r of visible){
           const a = document.createElement('a');
           a.className = 'card';
-          a.href = `/docs/view.html?repo=${encodeURIComponent(r.name)}`;
+          a.href = `docs/view.html?repo=${encodeURIComponent(r.name)}`;
           a.innerHTML = `
             <div class="note">${r.topics?.slice(0,3).join(' · ') || 'project'}</div>
             <h3 class="title">${r.name}</h3>
